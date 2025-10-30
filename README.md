@@ -1,0 +1,2 @@
+# ezCharts
+Minimalist Visualization Library
