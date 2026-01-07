@@ -4,6 +4,9 @@ export * from "./primitives";
 // Scales and utilities
 export * from "./scales";
 
+// Theme system
+export * from "./theme";
+
 // Components
 export * from "./axis";
 export * from "./grid";

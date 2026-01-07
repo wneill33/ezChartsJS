@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Group, Line } from "./primitives";
 import { niceTicks } from "./scales";
+import { useTheme } from "./theme";
+import { createGridLineStyle } from "./utils/styles";
 
 type GridProps = {
   width: number;
@@ -10,12 +12,11 @@ type GridProps = {
   xTicks?: number;
   yTicks?: number;
   translate?: { x: number; y: number };
-  className?: string;
   vertical?: boolean;
   horizontal?: boolean;
 };
 
-export const Grid: React.FC<GridProps> = ({
+export const Grid = React.memo<GridProps>(function Grid({
   width,
   height,
   xDomain,
@@ -23,15 +24,28 @@ export const Grid: React.FC<GridProps> = ({
   xTicks = 5,
   yTicks = 5,
   translate,
-  className = "stroke-gray-200 stroke-1",
   vertical = true,
   horizontal = true,
-}) => {
-  const xTickValues = xDomain ? niceTicks(xDomain[0], xDomain[1], xTicks) : [];
-  const yTickValues = yDomain ? niceTicks(yDomain[0], yDomain[1], yTicks) : [];
+}) {
+  const theme = useTheme();
+
+  const xTickValues = React.useMemo(
+    () => (xDomain ? niceTicks(xDomain[0], xDomain[1], xTicks) : []),
+    [xDomain, xTicks]
+  );
+
+  const yTickValues = React.useMemo(
+    () => (yDomain ? niceTicks(yDomain[0], yDomain[1], yTicks) : []),
+    [yDomain, yTicks]
+  );
+
+  const lineStyle = React.useMemo(
+    () => createGridLineStyle(theme),
+    [theme]
+  );
 
   return (
-    <Group translate={translate} className={className}>
+    <Group translate={translate}>
       {vertical &&
         xDomain &&
         xTickValues.map((tick) => {
@@ -43,7 +57,7 @@ export const Grid: React.FC<GridProps> = ({
               y1={0}
               x2={x}
               y2={height}
-              className={className}
+              style={lineStyle}
             />
           );
         })}
@@ -59,10 +73,10 @@ export const Grid: React.FC<GridProps> = ({
               y1={y}
               x2={width}
               y2={y}
-              className={className}
+              style={lineStyle}
             />
           );
         })}
     </Group>
   );
-};
+});

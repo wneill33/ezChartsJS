@@ -28,7 +28,6 @@ export function bandScale(
   const n = domain.length;
   const step = (r1 - r0) / (n + padding * (n - 1));
   const bandwidth = step / (1 + padding);
-  const offset = step - bandwidth;
 
   const indexMap = new Map(domain.map((d, i) => [d, i]));
 
